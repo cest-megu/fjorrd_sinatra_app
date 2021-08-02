@@ -11,7 +11,7 @@
 - `fjord_sinatra_app`のディレクトリに移動します。
 - アプリ立ち上げのため、必要なgemファイルをインストールするために、
 ```
-bundle install --path vendor/bundle
+bundle install
 ```
 を実行します。
 
