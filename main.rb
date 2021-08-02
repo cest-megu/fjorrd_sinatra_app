@@ -4,14 +4,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'securerandom'
 require 'json'
-
 # About memo app class
-
-helpers do
-  def h(text)
-    Rack::Utils.escape_html(text)
-  end
-end
 class
    Memo
   def self.create(title:, content:)
@@ -30,6 +23,12 @@ class
 
   def self.destroy(id:)
     File.delete("./memos/#{id}.json")
+  end
+end
+
+helpers do
+  def h(text)
+    Rack::Utils.escape_html(text)
   end
 end
 
