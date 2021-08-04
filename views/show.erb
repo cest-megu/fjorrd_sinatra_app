@@ -4,7 +4,7 @@
 <div class="showpage_button">
   <button class="button" onclick="location.href='/memos/<%= @memo[:id] %>/edit'" >変更する</button>
   <form action="/memos/<%= @memo[:id] %>" method="post">
-    <button class="button" type="submit" name="_method" value="DELETE">削除する</button>
+    <button class="button" name="_method" value="DELETE">削除する</button>
   </form>
-  <button class="button" type="submit" onclick="location.href='/memos'" >メモ一覧へ</button>
+  <button class="button" onclick="location.href='/memos'" >メモ一覧へ</button>
 </div>
