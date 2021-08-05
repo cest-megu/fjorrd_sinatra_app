@@ -4,5 +4,5 @@
   <button class="button" onclick="location.href='/memos/new'">新規投稿</button>
 </div>
 <div class="memo_list">
-  <%= @memos.map {|memo| "<a href=memos/#{memo[:id]}>#{memo[:title]}</a>"}.join("<br>") %>
+  <%= @memos.map {|memo| "<a href=memos/#{memo[:id]}>#{h(memo[:title])}</a>"}.join("<br>") %>
 </div>
