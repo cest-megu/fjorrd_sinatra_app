@@ -1,28 +1,31 @@
 # frozen_string_literal: true
+#!/usr/bin/env ruby
 
 require 'sinatra'
 require 'sinatra/reloader'
 require 'securerandom'
-require 'json'
+require 'pg'
 
 # About memo app class
 class Memo
   def self.create(title:, content:)
-    memo_contents = { id: SecureRandom.uuid, title: title, content: content }
-    File.open("./memos/#{memo_contents[:id]}.json", 'w') { |file| file.puts JSON.pretty_generate(memo_contents) }
+    connection = PG.connect( dbname: 'database-memo' )
+    connection.exec("INSERT INTO memotable(title, content) VALUES ('#{title}', '#{content}')")
   end
 
   def self.find(id:)
-    JSON.parse(File.open("./memos/#{id}.json").read, symbolize_names: true)
+    connection = PG.connect( dbname: 'database-memo' )
+    connection.exec("SELECT #{id} FROM memotable")
   end
 
   def self.update(id:, title:, content:)
-    new_contents = { id: id, title: title, content: content }
-    File.open("./memos/#{new_contents[:id]}.json", 'w') { |file| file.puts JSON.pretty_generate(new_contents) }
+    connection = PG.connect( dbname: 'database-memo' )
+    connection.exec("UPDATE memotable SET id = '#{id}', title = '#{title}', content = '#{content}'")
   end
 
   def self.destroy(id:)
-    File.delete("./memos/#{id}.json")
+    connection = PG.connect( dbname: 'database-memo' )
+    connection.exec("DELETE FROM memotable WHERE id = '#{id}'")
   end
 end
 
@@ -33,8 +36,14 @@ helpers do
 end
 
 get '/memos' do
-  memo_list = Dir.glob('./memos/*.json')
-  @memos = memo_list.map { |memo| JSON.parse(File.read(memo), symbolize_names: true) }
+  connection = PG.connect( dbname: 'database-memo' )
+  @memos = {}
+  connection.exec("SELECT * FROM memotable") do |result|
+    result.each do |row|
+      @memos = { id: SecureRandom.uuid, title: row["title"], content: row["content"] }
+      binding.irb
+    end
+  end
   erb :index
 end
 
