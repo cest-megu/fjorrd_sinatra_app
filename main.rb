@@ -15,17 +15,17 @@ class Memo
 
   def self.find(id:)
     connection = PG.connect( dbname: 'database-memo' )
-    connection.exec("SELECT * FROM memotable WHERE id = '#{id}'").to_a
+    connection.exec("SELECT * FROM memotable WHERE id = '#{id}'").to_a.first
   end
 
   def self.update(id:, title:, content:)
     connection = PG.connect( dbname: 'database-memo' )
-    connection.exec("UPDATE memotable SET id ='#{id}', title ='#{title}', content ='#{content}'")
+    connection.exec("UPDATE memotable SET title ='#{title}', content ='#{content}' WHERE id ='#{id}'").to_a.first
   end
 
   def self.destroy(id:)
     connection = PG.connect( dbname: 'database-memo' )
-    connection.exec("DELETE FROM memotable WHERE id ='#{id}'")
+    connection.exec("DELETE FROM memotable WHERE id ='#{id}'").to_a.first
   end
 end
 
@@ -58,7 +58,6 @@ post '/memos' do
 end
 
 get '/memos/:id' do
-  binding.irb
   @memo = Memo.find(id: params[:id])
   erb :show
 end
