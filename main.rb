@@ -41,7 +41,6 @@ get '/memos' do
   connection.exec("SELECT * FROM memotable") do |result|
     result.each do |row|
       @memos = { id: SecureRandom.uuid, title: row["title"], content: row["content"] }
-      binding.irb
     end
   end
   erb :index
