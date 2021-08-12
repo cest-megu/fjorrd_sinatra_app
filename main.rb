@@ -10,22 +10,22 @@ require 'pg'
 class Memo
   def self.create(title:, content:)
     connection = PG.connect( dbname: 'database-memo' )
-    connection.exec("INSERT INTO memotable(title, content) VALUES ('#{title}', '#{content}')")
+    connection.exec("INSERT INTO memotable(id, title, content) VALUES ('#{SecureRandom.uuid}', '#{title}', '#{content}')")
   end
 
   def self.find(id:)
     connection = PG.connect( dbname: 'database-memo' )
-    connection.exec("SELECT #{id} FROM memotable")
+    connection.exec("SELECT * FROM memotable WHERE id = '#{id}'").to_a
   end
 
   def self.update(id:, title:, content:)
     connection = PG.connect( dbname: 'database-memo' )
-    connection.exec("UPDATE memotable SET id = '#{id}', title = '#{title}', content = '#{content}'")
+    connection.exec("UPDATE memotable SET id ='#{id}', title ='#{title}', content ='#{content}'")
   end
 
   def self.destroy(id:)
     connection = PG.connect( dbname: 'database-memo' )
-    connection.exec("DELETE FROM memotable WHERE id = '#{id}'")
+    connection.exec("DELETE FROM memotable WHERE id ='#{id}'")
   end
 end
 
@@ -37,10 +37,11 @@ end
 
 get '/memos' do
   connection = PG.connect( dbname: 'database-memo' )
-  @memos = {}
+  memo_contents = {}
+  @memos = []
   connection.exec("SELECT * FROM memotable") do |result|
     result.each do |row|
-      @memos = { id: SecureRandom.uuid, title: row["title"], content: row["content"] }
+      @memos << memo_contents = { id: row["id"], title: row["title"], content: row["content"] }
     end
   end
   erb :index
@@ -57,6 +58,7 @@ post '/memos' do
 end
 
 get '/memos/:id' do
+  binding.irb
   @memo = Memo.find(id: params[:id])
   erb :show
 end
