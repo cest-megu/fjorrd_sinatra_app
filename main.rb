@@ -70,7 +70,7 @@ get '/memos/:id/edit' do
 end
 
 patch '/memos/:id' do
-  @memo = Memo.update(id: params[:id], title: h(params[:title]), content: h(params[:content]))
+  @memo = Memo.update(id: params[:id], title: params[:title], content: params[:content])
   redirect '/memos'
   erb :edit
 end
