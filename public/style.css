@@ -1,0 +1,67 @@
+body {
+  font-family: fantasy;
+  font-weight: bolder;
+  text-align: center;
+  background-color: #FEF5D1;
+  color: #79272c;
+  font-size: 24px;
+  margin: 0;
+  display: flex;
+  flex-flow: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+header, footer {
+  background-color: #86ded7;
+  align-items: center;
+  text-align: center;
+}
+
+p {
+  font-size: 30px;
+  color: #79272c;
+}
+
+.button {
+  background-color: #86ded7;
+  color: #ffffff;
+  margin: 20px;
+  padding: 10px 40px;
+  width: 180px;
+  height: 48px;
+  font-size: 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.title, .content {
+  margin: 40px;
+}
+
+.content label {
+  vertical-align: top;
+}
+
+.title_form {
+  margin-left: 10px;
+  width: 320px;
+  height: 36px;
+  font-size: 20px;
+}
+
+.content_form {
+  margin-left: 54px;
+  width: 320px;
+  height: 180px;
+  font-size: 20px;
+}
+
+.showpage_button {
+  display: flex;
+  justify-content: center;
+}

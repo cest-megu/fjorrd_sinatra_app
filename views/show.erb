@@ -1,0 +1,10 @@
+<%# メモの詳細ページ %>
+<div class="title">タイトル：<%= h(@memo[:title]) %></div>
+<div class="content">メモの内容：<%= h(@memo[:content]) %></div>
+<div class="showpage_button">
+  <button class="button" onclick="location.href='/memos/<%= @memo[:id] %>/edit'" >変更する</button>
+  <form action="/memos/<%= @memo[:id] %>" method="post">
+    <button class="button" name="_method" value="DELETE">削除する</button>
+  </form>
+  <button class="button" onclick="location.href='/memos'" >メモ一覧へ</button>
+</div>
