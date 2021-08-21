@@ -13,20 +13,20 @@ class Memo
 
   def self.create(title:, content:)
     @connection.exec("INSERT INTO memotable(id, title, content)
-    VALUES ($1, $2, $3)",[SecureRandom.uuid, title, content])
+    VALUES ($1, $2, $3)", [SecureRandom.uuid, title, content])
   end
 
   def self.find(id:)
-    @connection.exec("SELECT * FROM memotable WHERE id = $1",[id]).to_a.first
+    @connection.exec('SELECT * FROM memotable WHERE id = $1', [id]).to_a.first
   end
 
   def self.update(id:, title:, content:)
-    @connection.exec("UPDATE memotable SET title = $1, content = $2 WHERE id = $3",
-    [title, content, id]).to_a.first
+    @connection.exec('UPDATE memotable SET title = $1, content = $2 WHERE id = $3',
+                     [title, content, id]).to_a.first
   end
 
   def self.destroy(id:)
-    @connection.exec("DELETE FROM memotable WHERE id = $1", [id]).to_a.first
+    @connection.exec('DELETE FROM memotable WHERE id = $1', [id]).to_a.first
   end
 end
 
