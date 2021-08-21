@@ -1,28 +1,32 @@
 # frozen_string_literal: true
 
+# !/usr/bin/env ruby
+
 require 'sinatra'
 require 'sinatra/reloader'
 require 'securerandom'
-require 'json'
+require 'pg'
 
 # About memo app class
 class Memo
+  @connection = PG.connect(dbname: 'database-memo')
+
   def self.create(title:, content:)
-    memo_contents = { id: SecureRandom.uuid, title: title, content: content }
-    File.open("./memos/#{memo_contents[:id]}.json", 'w') { |file| file.puts JSON.pretty_generate(memo_contents) }
+    @connection.exec("INSERT INTO memotable(id, title, content)
+    VALUES ($1, $2, $3)", [SecureRandom.uuid, title, content])
   end
 
   def self.find(id:)
-    JSON.parse(File.open("./memos/#{id}.json").read, symbolize_names: true)
+    @connection.exec('SELECT * FROM memotable WHERE id = $1', [id]).to_a.first
   end
 
   def self.update(id:, title:, content:)
-    new_contents = { id: id, title: title, content: content }
-    File.open("./memos/#{new_contents[:id]}.json", 'w') { |file| file.puts JSON.pretty_generate(new_contents) }
+    @connection.exec('UPDATE memotable SET title = $1, content = $2 WHERE id = $3',
+                     [title, content, id]).to_a.first
   end
 
   def self.destroy(id:)
-    File.delete("./memos/#{id}.json")
+    @connection.exec('DELETE FROM memotable WHERE id = $1', [id]).to_a.first
   end
 end
 
@@ -33,8 +37,14 @@ helpers do
 end
 
 get '/memos' do
-  memo_list = Dir.glob('./memos/*.json')
-  @memos = memo_list.map { |memo| JSON.parse(File.read(memo), symbolize_names: true) }
+  memo_contents = {}
+  @memos = []
+  connection = PG.connect(dbname: 'database-memo')
+  connection.exec('SELECT * FROM memotable') do |result|
+    result.each do |row|
+      @memos << memo_contents = { id: row['id'], title: row['title'], content: row['content'] }
+    end
+  end
   erb :index
 end
 
@@ -59,7 +69,7 @@ get '/memos/:id/edit' do
 end
 
 patch '/memos/:id' do
-  @memo = Memo.update(id: params[:id], title: h(params[:title]), content: h(params[:content]))
+  @memo = Memo.update(id: params[:id], title: params[:title], content: params[:content])
   redirect '/memos'
   erb :edit
 end
