@@ -9,25 +9,23 @@ require 'pg'
 
 # About memo app class
 class Memo
+  @connection = PG.connect(dbname: 'database-memo')
+
   def self.create(title:, content:)
-    connection = PG.connect(dbname: 'database-memo')
-    connection.exec("INSERT INTO memotable(id, title, content)
+    @connection.exec("INSERT INTO memotable(id, title, content)
     VALUES ('#{SecureRandom.uuid}', '#{title}', '#{content}')")
   end
 
   def self.find(id:)
-    connection = PG.connect(dbname: 'database-memo')
-    connection.exec("SELECT * FROM memotable WHERE id = '#{id}'").to_a.first
+    @connection.exec("SELECT * FROM memotable WHERE id = '#{id}'").to_a.first
   end
 
   def self.update(id:, title:, content:)
-    connection = PG.connect(dbname: 'database-memo')
-    connection.exec("UPDATE memotable SET title ='#{title}', content ='#{content}' WHERE id ='#{id}'").to_a.first
+    @connection.exec("UPDATE memotable SET title ='#{title}', content ='#{content}' WHERE id ='#{id}'").to_a.first
   end
 
   def self.destroy(id:)
-    connection = PG.connect(dbname: 'database-memo')
-    connection.exec("DELETE FROM memotable WHERE id ='#{id}'").to_a.first
+    @connection.exec("DELETE FROM memotable WHERE id ='#{id}'").to_a.first
   end
 end
 
@@ -38,9 +36,9 @@ helpers do
 end
 
 get '/memos' do
-  connection = PG.connect(dbname: 'database-memo')
   memo_contents = {}
   @memos = []
+  connection = PG.connect(dbname: 'database-memo')
   connection.exec('SELECT * FROM memotable') do |result|
     result.each do |row|
       @memos << memo_contents = { id: row['id'], title: row['title'], content: row['content'] }
