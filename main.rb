@@ -18,7 +18,6 @@ class Memo
 
   def self.find(id:)
     @connection.exec('SELECT * FROM memotable WHERE id = $1', [id])[0]
-    binding.irb
   end
 
   def self.update(id:, title:, content:)
@@ -38,12 +37,11 @@ helpers do
 end
 
 get '/memos' do
-  memo_contents = {}
   @memos = []
   connection = PG.connect(dbname: 'database-memo')
   connection.exec('SELECT * FROM memotable') do |result|
     result.each do |row|
-      @memos << memo_contents = { id: row['id'], title: row['title'], content: row['content'] }
+      @memos << { id: row['id'], title: row['title'], content: row['content'] }
     end
   end
   erb :index
