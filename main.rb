@@ -22,11 +22,11 @@ class Memo
 
   def self.update(id:, title:, content:)
     @connection.exec('UPDATE memotable SET title = $1, content = $2 WHERE id = $3',
-                     [title, content, id])[0]
+                     [title, content, id]).to_a.first
   end
 
   def self.destroy(id:)
-    @connection.exec('DELETE FROM memotable WHERE id = $1', [id])[0]
+    @connection.exec('DELETE FROM memotable WHERE id = $1', [id]).to_a.first
   end
 end
 
