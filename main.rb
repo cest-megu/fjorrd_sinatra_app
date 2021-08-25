@@ -17,16 +17,17 @@ class Memo
   end
 
   def self.find(id:)
-    @connection.exec('SELECT * FROM memotable WHERE id = $1', [id]).to_a.first
+    @connection.exec('SELECT * FROM memotable WHERE id = $1', [id])[0]
+    binding.irb
   end
 
   def self.update(id:, title:, content:)
     @connection.exec('UPDATE memotable SET title = $1, content = $2 WHERE id = $3',
-                     [title, content, id]).to_a.first
+                     [title, content, id])[0]
   end
 
   def self.destroy(id:)
-    @connection.exec('DELETE FROM memotable WHERE id = $1', [id]).to_a.first
+    @connection.exec('DELETE FROM memotable WHERE id = $1', [id])[0]
   end
 end
 
