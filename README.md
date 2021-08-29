@@ -19,11 +19,8 @@ bundle install
 - ターミナルで
 
 ```
-bundle exec ruby main.rb
+ruby main.rb
 ```
 を実行します。
 
 - ブラウザを開いて、`localhost:4567/memos`にアクセスできればメモアプリが使用できます。
-
-## 投稿したメモの保存先
-  新規投稿したメモは、`memos`ディレクトリに自動的にjsonファイルとして保存されます。
