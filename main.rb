@@ -22,11 +22,11 @@ class Memo
 
   def self.update(id:, title:, content:)
     @connection.exec('UPDATE memotable SET title = $1, content = $2 WHERE id = $3',
-                     [title, content, id]).to_a.first
+                     [title, content, id])
   end
 
   def self.destroy(id:)
-    @connection.exec('DELETE FROM memotable WHERE id = $1', [id]).to_a.first
+    @connection.exec('DELETE FROM memotable WHERE id = $1', [id])
   end
 end
 
@@ -39,7 +39,7 @@ end
 get '/memos' do
   @memos = []
   connection = PG.connect(dbname: 'database-memo')
-  connection.exec('SELECT * FROM memotable') do |result|
+  connection.exec('SELECT * FROM memotable ORDER BY title ASC') do |result|
     result.each do |row|
       @memos << { id: row['id'], title: row['title'], content: row['content'] }
     end
